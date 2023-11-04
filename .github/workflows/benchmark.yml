@@ -33,7 +33,7 @@ jobs:
             --target-node=$FAL_TARGET_NODE
 
       - name: Regenerate tables
-        run: python benchmarks/regenerate_tables.py /tmp/latest.json
+        run: python benchmarks/update_table.py /tmp/latest.json
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
