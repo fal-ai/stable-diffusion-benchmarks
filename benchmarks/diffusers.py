@@ -1,6 +1,8 @@
-import fal
 from functools import partial
-from benchmarks.settings import BenchmarkSettings, InputParameters, BenchmarkResults
+
+import fal
+
+from benchmarks.settings import BenchmarkResults, BenchmarkSettings, InputParameters
 
 
 @fal.function(

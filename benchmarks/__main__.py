@@ -1,8 +1,10 @@
-import json
 import argparse
-from rich.progress import track
-from pathlib import Path
+import json
+from dataclasses import asdict
 from datetime import datetime
+from pathlib import Path
+
+from rich.progress import track
 
 from benchmarks import diffusers
 from benchmarks.settings import BenchmarkSettings, InputParameters
@@ -36,7 +38,7 @@ def main() -> None:
     )
     parameters = InputParameters(prompt="A photo of a cat", steps=50)
 
-    results = []
+    timings = []
     for benchmark in track(ALL_BENCHMARKS, description="Running benchmarks..."):
         print(f"Running benchmark: {benchmark['name']}")
         function = benchmark["function"].on(_scheduler="nomad")
@@ -52,12 +54,18 @@ def main() -> None:
             parameters=parameters,
             **benchmark["kwargs"],
         )
-        results.append(
+        timings.append(
             {
                 "name": benchmark["name"],
                 "timings": benchmark_results.timings,
             }
         )
+
+    results = {
+        "settings": asdict(settings),
+        "parameters": asdict(parameters),
+        "timings": timings,
+    }
 
     with open(options.results_dir / f"{options.session_id}.json", "w") as results_file:
         json.dump(results, results_file)

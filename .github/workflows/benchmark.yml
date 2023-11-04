@@ -1,11 +1,7 @@
 name: Run App Integration Tests
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [assigned, opened, synchronize, reopened]
+  workflow_dispatch:
 
 jobs:
   run:
@@ -33,6 +29,16 @@ jobs:
           FAL_TARGET_NODE: ${{ secrets.FAL_TARGET_NODE }}
         run: |
           python -m benchmarks /tmp \
-            --session-id="${{ github.run_id }}" \
+            --session-id=latest \
             --target-node=$FAL_TARGET_NODE
 
+      - name: Regenerate tables
+        run: python benchmarks/regenerate_tables.py /tmp/latest.json
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "perf: update benchmarks"
+          commit_options: "--no-verify"
+          commit_user_name: "Fal Bot"
+          commit_user_email: "hello@fal.ai"
