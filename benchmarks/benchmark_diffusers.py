@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 from functools import partial
 
@@ -57,13 +59,10 @@ def diffusers_any(
             pipeline.unet, fullgraph=True, mode="reduce-overhead"
         )
 
-    return benchmark_settings.apply(
-        partial(
-            pipeline,
-            parameters.prompt,
-            num_inference_steps=parameters.steps,
-        )
+    inference_func = partial(
+        pipeline, parameters.prompt, num_inference_steps=parameters.steps
     )
+    return benchmark_settings.apply(inference_func)
 
 
 LOCAL_BENCHMARKS = [
