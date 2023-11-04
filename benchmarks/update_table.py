@@ -4,10 +4,15 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 README_PATH = Path(__file__).parent.parent / "README.md"
-TABLE_HEADER = "|                  | mean (s) | median (s) | min (s) | max (s) |\n"
-TABLE_DIVIDER = "|------------------|----------|------------|---------|---------|\n"
+TABLE_HEADER = (
+    "|                  | mean (s) | median (s) | min (s) | max (s) | speed (it/s) |\n"
+)
+TABLE_DIVIDER = (
+    "|------------------|----------|------------|---------|---------|--------------|\n"
+)
 TABLE_ROW_FORMAT = (
-    "| {name:16} | {mean:7.3f}s | {median:9.3f}s | {min:6.3f}s | {max:6.3f}s |\n"
+    "| {name:16} | {mean:7.3f}s | {median:9.3f}s "
+    "| {min:6.3f}s | {max:6.3f}s | {speed:7.2f} it/s |\n"
 )
 START_MARKER = "<!-- START TABLE -->\n"
 END_MARKER = "<!-- END TABLE -->\n"
@@ -26,6 +31,8 @@ def main():
         lines = f.readlines()
 
     table_lines = [TABLE_HEADER, TABLE_DIVIDER]
+
+    steps = results["parameters"]["steps"]
     for timing in results["timings"]:
         benchmark_name = timing["name"]
         benchmark_timings = timing["timings"]
@@ -36,6 +43,7 @@ def main():
                 median=statistics.median(benchmark_timings),
                 min=min(benchmark_timings),
                 max=max(benchmark_timings),
+                speed=statistics.median(steps / timing for timing in benchmark_timings),
             )
         )
 
