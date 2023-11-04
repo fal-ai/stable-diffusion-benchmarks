@@ -15,9 +15,9 @@ from benchmarks.settings import BenchmarkResults, BenchmarkSettings, InputParame
     machine_type="GPU",
 )
 def diffusers_any(
-    model_name: str,
     benchmark_settings: BenchmarkSettings,
     parameters: InputParameters,
+    model_name: str,
 ) -> BenchmarkResults:
     import torch
     from diffusers import DiffusionPipeline
@@ -39,14 +39,16 @@ def diffusers_any(
 
 LOCAL_BENCHMARKS = [
     {
-        "name": "Diffusers SD1.5",
+        "name": "Diffusers (fp16, SDPA)",
+        "category": "SD1.5",
         "function": diffusers_any,
         "kwargs": {
             "model_name": "runwayml/stable-diffusion-v1-5",
         },
     },
     {
-        "name": "Diffusers SDXL",
+        "name": "Diffusers (fp16, SDPA)",
+        "category": "SDXL",
         "function": diffusers_any,
         "kwargs": {
             "model_name": "stabilityai/stable-diffusion-xl-base-1.0",

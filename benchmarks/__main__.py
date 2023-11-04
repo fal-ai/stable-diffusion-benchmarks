@@ -57,6 +57,7 @@ def main() -> None:
         timings.append(
             {
                 "name": benchmark["name"],
+                "category": benchmark["category"],  # "SD1.5", "SDXL"
                 "timings": benchmark_results.timings,
             }
         )

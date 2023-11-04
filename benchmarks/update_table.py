@@ -1,6 +1,7 @@
 import json
 import statistics
 from argparse import ArgumentParser
+from collections import defaultdict
 from pathlib import Path
 
 README_PATH = Path(__file__).parent.parent / "README.md"
@@ -30,26 +31,32 @@ def main():
     with open(options.document_path) as f:
         lines = f.readlines()
 
-    table_lines = [TABLE_HEADER, TABLE_DIVIDER]
-
+    all_rows = defaultdict(list)
     steps = results["parameters"]["steps"]
     for timing in results["timings"]:
         benchmark_name = timing["name"]
         benchmark_timings = timing["timings"]
-        table_lines.append(
-            TABLE_ROW_FORMAT.format(
-                name=benchmark_name,
-                mean=statistics.mean(benchmark_timings),
-                median=statistics.median(benchmark_timings),
-                min=min(benchmark_timings),
-                max=max(benchmark_timings),
-                speed=statistics.median(steps / timing for timing in benchmark_timings),
-            )
+        row = TABLE_ROW_FORMAT.format(
+            name=benchmark_name,
+            mean=statistics.mean(benchmark_timings),
+            median=statistics.median(benchmark_timings),
+            min=min(benchmark_timings),
+            max=max(benchmark_timings),
+            speed=statistics.median(steps / timing for timing in benchmark_timings),
         )
+        all_rows[timing["category"]].append(row)
+
+    tables = []
+    for category, rows in all_rows.items():
+        tables.append(f"### {category} Benchmarks\n")
+        tables.append(TABLE_HEADER)
+        tables.append(TABLE_DIVIDER)
+        tables.extend(rows)
+        tables.append("\n")
 
     start_index = lines.index(START_MARKER) + 1
     end_index = lines.index(END_MARKER)
-    lines[start_index:end_index] = table_lines
+    lines[start_index:end_index] = tables
 
     with open(options.document_path, "w") as f:
         f.writelines(lines)
