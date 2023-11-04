@@ -21,7 +21,8 @@ def diffusers_any(
     parameters: InputParameters,
     model_name: str,
     enable_xformers: bool = False,
-    compile: bool = False,
+    use_compile: bool = False,
+    use_nchw_channels: bool = False,
 ) -> BenchmarkResults:
     # Some of these functionality might not be available in torch 2.1,
     # but setting just in case if in the future we upgrade to a newer
@@ -45,10 +46,13 @@ def diffusers_any(
     if enable_xformers:
         pipeline.enable_xformers_memory_efficient_attention()
 
+    if use_nchw_channels:
+        pipeline.unet = pipeline.unet.to(memory_format=torch.channels_last)
+
     # The mode here is reduce-overhead, which is a balanced compromise between
     # compilation time and runtime. The other modes might be a possible choice
     # for future benchmarks.
-    if compile:
+    if use_compile:
         pipeline.unet = torch.compile(
             pipeline.unet, fullgraph=True, mode="reduce-overhead"
         )
@@ -86,7 +90,17 @@ LOCAL_BENCHMARKS = [
         "function": diffusers_any,
         "kwargs": {
             "model_name": "runwayml/stable-diffusion-v1-5",
-            "compile": True,
+            "use_compile": True,
+        },
+    },
+    {
+        "name": "Diffusers (fp16, SDPA, compiled, NCHW channels last)",
+        "category": "SD1.5",
+        "function": diffusers_any,
+        "kwargs": {
+            "model_name": "runwayml/stable-diffusion-v1-5",
+            "use_compile": True,
+            "use_nchw_channels": True,
         },
     },
     {
@@ -112,7 +126,17 @@ LOCAL_BENCHMARKS = [
         "function": diffusers_any,
         "kwargs": {
             "model_name": "stabilityai/stable-diffusion-xl-base-1.0",
-            "compile": True,
+            "use_compile": True,
+        },
+    },
+    {
+        "name": "Diffusers (fp16, SDPA, compiled, NCHW channels last)",
+        "category": "SDXL",
+        "function": diffusers_any,
+        "kwargs": {
+            "model_name": "stabilityai/stable-diffusion-xl-base-1.0",
+            "use_compile": True,
+            "use_nchw_channels": True,
         },
     },
 ]
