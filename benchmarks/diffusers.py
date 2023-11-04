@@ -1,3 +1,4 @@
+import os
 from functools import partial
 
 import fal
@@ -20,7 +21,14 @@ def diffusers_any(
     parameters: InputParameters,
     model_name: str,
     enable_xformers: bool = False,
+    compile: bool = False,
 ) -> BenchmarkResults:
+    # Some of these functionality might not be available in torch 2.1,
+    # but setting just in case if in the future we upgrade to a newer
+    # version of torch.
+    os.environ["TORCHINDUCTOR_CACHE_DIR"] = "/data/torch-cache"
+    os.environ["TORCHINDUCTOR_FX_GRAPH_CACHE"] = "1"
+
     import torch
     from diffusers import DiffusionPipeline
 
@@ -30,8 +38,20 @@ def diffusers_any(
         use_safetensors=True,
     )
     pipeline.to("cuda")
+
+    # Use XFormers memory efficient attention instead of Torch SDPA
+    # which might also utilize memory efficient attention (alongside
+    # flash attention).
     if enable_xformers:
         pipeline.enable_xformers_memory_efficient_attention()
+
+    # The mode here is reduce-overhead, which is a balanced compromise between
+    # compilation time and runtime. The other modes might be a possible choice
+    # for future benchmarks.
+    if compile:
+        pipeline.unet = torch.compile(
+            pipeline.unet, fullgraph=True, mode="reduce-overhead"
+        )
 
     return benchmark_settings.apply(
         partial(
@@ -61,6 +81,15 @@ LOCAL_BENCHMARKS = [
         },
     },
     {
+        "name": "Diffusers (fp16, SDPA, compiled)",
+        "category": "SD1.5",
+        "function": diffusers_any,
+        "kwargs": {
+            "model_name": "runwayml/stable-diffusion-v1-5",
+            "compile": True,
+        },
+    },
+    {
         "name": "Diffusers (fp16, SDPA)",
         "category": "SDXL",
         "function": diffusers_any,
@@ -75,6 +104,15 @@ LOCAL_BENCHMARKS = [
         "kwargs": {
             "model_name": "stabilityai/stable-diffusion-xl-base-1.0",
             "enable_xformers": True,
+        },
+    },
+    {
+        "name": "Diffusers (fp16, SDPA, compiled)",
+        "category": "SDXL",
+        "function": diffusers_any,
+        "kwargs": {
+            "model_name": "stabilityai/stable-diffusion-xl-base-1.0",
+            "compile": True,
         },
     },
 ]
