@@ -35,6 +35,7 @@ Generation options:
 - `num_inference_steps=50`
 - For SD1.5, the width/height is 512x512 (the default); for SDXL, the width/height is 1024x1024.
 - For all other options, the defaults from the generation systems are used.
+- Weights are always half-precision (fp16) unless otherwise specified.
 
 Environments (like torch and other library versions) for each benchmark are defined
 under [benchmarks/](benchmarks/) folder.
