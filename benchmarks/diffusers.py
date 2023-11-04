@@ -44,5 +44,12 @@ LOCAL_BENCHMARKS = [
         "kwargs": {
             "model_name": "runwayml/stable-diffusion-v1-5",
         },
-    }
+    },
+    {
+        "name": "Diffusers SDXL",
+        "function": diffusers_any,
+        "kwargs": {
+            "model_name": "stabilityai/stable-diffusion-xl-base-1.0",
+        },
+    },
 ]
