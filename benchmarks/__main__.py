@@ -14,6 +14,33 @@ ALL_BENCHMARKS = [
 ]
 
 
+def load_previous_timings(
+    session_file: Path,
+    settings: BenchmarkSettings,
+    parameters: InputParameters,
+) -> dict[tuple[str, str], list[float]]:
+    if not session_file.exists():
+        return {}
+
+    with open(session_file) as stream:
+        results = json.load(stream)
+
+    if results["settings"] != asdict(settings):
+        print(f"Settings mismatch: {results['settings']} != {asdict(settings)}")
+        print(f"Skipping {session_file}")
+        return {}
+
+    if results["parameters"] != asdict(parameters):
+        print(f"Parameters mismatch: {results['parameters']} != {asdict(parameters)}")
+        print(f"Skipping {session_file}")
+        return {}
+
+    return {
+        (timing["category"], timing["name"]): timing["timings"]
+        for timing in results["timings"]
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("results_dir", type=Path)
@@ -31,6 +58,7 @@ def main() -> None:
     parser.add_argument("--target-node", type=str, default=None)
 
     options = parser.parse_args()
+    session_file = options.results_dir / f"{options.session_id}.json"
 
     settings = BenchmarkSettings(
         warmup_iterations=options.warmup_iterations,
@@ -39,8 +67,21 @@ def main() -> None:
     parameters = InputParameters(prompt="A photo of a cat", steps=50)
 
     timings = []
+    previous_timings = load_previous_timings(session_file, settings, parameters)
     for benchmark in track(ALL_BENCHMARKS, description="Running benchmarks..."):
-        print(f"Running benchmark: {benchmark['name']}")
+        benchmark_key = (benchmark["category"], benchmark["name"])
+        if benchmark_key in previous_timings:
+            print(f"Skipping {benchmark_key} (already run)")
+            timings.append(
+                {
+                    "name": benchmark["name"],
+                    "category": benchmark["category"],  # "SD1.5", "SDXL"
+                    "timings": previous_timings[benchmark_key],
+                }
+            )
+            continue
+
+        print(f"Running benchmark: {benchmark_key}")
         function = benchmark["function"].on(_scheduler="nomad")
         if options.target_node:
             function = function.on(
@@ -68,8 +109,8 @@ def main() -> None:
         "timings": timings,
     }
 
-    with open(options.results_dir / f"{options.session_id}.json", "w") as results_file:
-        json.dump(results, results_file)
+    with open(session_file, "w") as stream:
+        json.dump(results, stream)
 
 
 if __name__ == "__main__":
