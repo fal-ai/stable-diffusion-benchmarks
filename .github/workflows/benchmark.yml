@@ -1,0 +1,38 @@
+name: Run App Integration Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: "${{ github.head_ref || github.run_id }}-${{ github.workflow }}"
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -e .
+          pip install -r requirements-dev.txt
+
+      - name: Run benchmarks
+        env:
+          FAL_KEY_ID: ${{ secrets.FAL_KEY_ID }}
+          FAL_KEY_SECRET: ${{ secrets.FAL_KEY_SECRET }}
+          FAL_TARGET_NODE: ${{ secrets.FAL_TARGET_NODE }}
+        run: |
+          python -m benchmarks /tmp \
+            --session-id="${{ github.run_id }}" \
+            --target-node=$FAL_TARGET_NODE
+
