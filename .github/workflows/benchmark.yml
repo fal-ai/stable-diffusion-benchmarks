@@ -2,6 +2,12 @@ name: Run Benchmarks
 
 on:
   workflow_dispatch:
+    inputs:
+      force-run:
+        description: "Force run"
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   run:
@@ -28,12 +34,15 @@ jobs:
           FAL_KEY_SECRET: ${{ secrets.FAL_KEY_SECRET }}
           FAL_TARGET_NODE: ${{ secrets.FAL_TARGET_NODE }}
         run: |
-          python -m benchmarks /tmp \
+          python -m benchmarks artifacts \
             --session-id=latest \
-            --target-node=$FAL_TARGET_NODE
+            --target-node=$FAL_TARGET_NODE \
+            --iterations=10 \
+            --warmup-iterations=3 \
+            ${{ fromJSON('["", "--force-run"]')[github.event.inputs.force-run == 'true'] }}
 
       - name: Regenerate tables
-        run: python benchmarks/update_table.py /tmp/latest.json
+        run: python benchmarks/update_table.py artifacts/latest.json
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4

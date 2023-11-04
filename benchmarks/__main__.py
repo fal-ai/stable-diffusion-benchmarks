@@ -52,6 +52,11 @@ def main() -> None:
         type=str,
         default=datetime.now().strftime("%Y%m%d-%H%M%S"),
     )
+    parser.add_argument(
+        "--force-run",
+        action="store_true",
+        help="Force running all benchmarks, even if they have already been run.",
+    )
 
     # For ensuring consistency among results, make sure to compare the numbers
     # within the same node. So the driver, cuda version, power supply, CPU compute
@@ -71,7 +76,7 @@ def main() -> None:
     previous_timings = load_previous_timings(session_file, settings, parameters)
     for benchmark in track(ALL_BENCHMARKS, description="Running benchmarks..."):
         benchmark_key = (benchmark["category"], benchmark["name"])
-        if benchmark_key in previous_timings:
+        if benchmark_key in previous_timings and not options.force_run:
             print(f"Skipping {benchmark_key} (already run)")
             timings.append(
                 {
