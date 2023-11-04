@@ -6,12 +6,13 @@ from pathlib import Path
 
 from rich.progress import track
 
-from benchmarks import benchmark_diffusers, benchmark_tensorrt
+from benchmarks import benchmark_diffusers, benchmark_oneflow, benchmark_tensorrt
 from benchmarks.settings import BenchmarkSettings, InputParameters
 
 ALL_BENCHMARKS = [
     *benchmark_diffusers.LOCAL_BENCHMARKS,
     *benchmark_tensorrt.LOCAL_BENCHMARKS,
+    *benchmark_oneflow.LOCAL_BENCHMARKS,
 ]
 
 
@@ -76,7 +77,8 @@ def main() -> None:
     previous_timings = load_previous_timings(session_file, settings, parameters)
     for benchmark in track(ALL_BENCHMARKS, description="Running benchmarks..."):
         benchmark_key = (benchmark["category"], benchmark["name"])
-        if benchmark_key in previous_timings and not options.force_run:
+        should_skip = benchmark.get("skip_if", False)
+        if benchmark_key in previous_timings and (not options.force_run or should_skip):
             print(f"Skipping {benchmark_key} (already run)")
             timings.append(
                 {

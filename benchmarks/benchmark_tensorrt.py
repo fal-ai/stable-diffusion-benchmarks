@@ -65,10 +65,6 @@ def prepare_tensorrt() -> Path:
         "https://pypi.ngc.nvidia.com",
     ],
     machine_type="GPU",
-    _scheduler="nomad",
-    _scheduler_options={
-        "target_node": "65.21.219.34",
-    },
 )
 def tensorrt_any(
     benchmark_settings: BenchmarkSettings,
