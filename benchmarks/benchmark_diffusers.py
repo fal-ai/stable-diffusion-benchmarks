@@ -67,7 +67,7 @@ def diffusers_any(
 
 LOCAL_BENCHMARKS = [
     {
-        "name": "Diffusers (fp16, SDPA)",
+        "name": "Diffusers (torch 2.1, SDPA)",
         "category": "SD1.5",
         "function": diffusers_any,
         "kwargs": {
@@ -75,7 +75,7 @@ LOCAL_BENCHMARKS = [
         },
     },
     {
-        "name": "Diffusers (fp16, xformers)",
+        "name": "Diffusers (torch 2.1, xformers)",
         "category": "SD1.5",
         "function": diffusers_any,
         "kwargs": {
@@ -84,7 +84,7 @@ LOCAL_BENCHMARKS = [
         },
     },
     {
-        "name": "Diffusers (fp16, SDPA, compiled)",
+        "name": "Diffusers (torch 2.1, SDPA, compiled)",
         "category": "SD1.5",
         "function": diffusers_any,
         "kwargs": {
@@ -93,7 +93,7 @@ LOCAL_BENCHMARKS = [
         },
     },
     {
-        "name": "Diffusers (fp16, SDPA, compiled, NCHW channels last)",
+        "name": "Diffusers (torch 2.1, SDPA, compiled, NCHW channels last)",
         "category": "SD1.5",
         "function": diffusers_any,
         "kwargs": {
@@ -103,7 +103,7 @@ LOCAL_BENCHMARKS = [
         },
     },
     {
-        "name": "Diffusers (fp16, SDPA)",
+        "name": "Diffusers (torch 2.1, SDPA)",
         "category": "SDXL",
         "function": diffusers_any,
         "kwargs": {
@@ -111,7 +111,7 @@ LOCAL_BENCHMARKS = [
         },
     },
     {
-        "name": "Diffusers (fp16, xformers)",
+        "name": "Diffusers (torch 2.1, xformers)",
         "category": "SDXL",
         "function": diffusers_any,
         "kwargs": {
@@ -120,7 +120,7 @@ LOCAL_BENCHMARKS = [
         },
     },
     {
-        "name": "Diffusers (fp16, SDPA, compiled)",
+        "name": "Diffusers (torch 2.1, SDPA, compiled)",
         "category": "SDXL",
         "function": diffusers_any,
         "kwargs": {
@@ -129,7 +129,7 @@ LOCAL_BENCHMARKS = [
         },
     },
     {
-        "name": "Diffusers (fp16, SDPA, compiled, NCHW channels last)",
+        "name": "Diffusers (torch 2.1, SDPA, compiled, NCHW channels last)",
         "category": "SDXL",
         "function": diffusers_any,
         "kwargs": {
