@@ -33,7 +33,11 @@ def main():
 
     all_rows = defaultdict(list)
     steps = results["parameters"]["steps"]
-    for timing in results["timings"]:
+    for timing in sorted(
+        results["timings"],
+        key=lambda timing: statistics.mean(timing["timings"]),
+        reverse=True,
+    ):
         benchmark_name = timing["name"]
         benchmark_timings = timing["timings"]
         row = TABLE_ROW_FORMAT.format(
@@ -47,7 +51,7 @@ def main():
         all_rows[timing["category"]].append(row)
 
     tables = []
-    for category, rows in all_rows.items():
+    for category, rows in sorted(all_rows.items(), key=lambda kv: kv[0]):
         tables.append(f"### {category} Benchmarks\n")
         tables.append(TABLE_HEADER)
         tables.append(TABLE_DIVIDER)
