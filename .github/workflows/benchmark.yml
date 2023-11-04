@@ -1,4 +1,4 @@
-name: Run App Integration Tests
+name: Run Benchmarks
 
 on:
   workflow_dispatch:
