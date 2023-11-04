@@ -119,6 +119,7 @@ def main() -> None:
 
     with open(session_file, "w") as stream:
         json.dump(results, stream)
+        stream.write("\n")
 
 
 if __name__ == "__main__":

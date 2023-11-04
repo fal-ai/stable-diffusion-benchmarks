@@ -33,6 +33,8 @@ Running on an A100 80G SXM hosted at [fal.ai](https://fal.ai).
 Generation options:
 - `prompt="A photo of a cat"`
 - `num_inference_steps=50`
+- For SD1.5, the width/height is 512x512 (the default); for SDXL, the width/height is 1024x1024.
+- For all other options, the defaults from the generation systems are used.
 
 Environments (like torch and other library versions) for each benchmark are defined
 under [benchmarks/](benchmarks/) folder.
