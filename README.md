@@ -13,6 +13,7 @@ Running on an A100 80G SXM hosted at [fal.ai](https://fal.ai).
 |------------------|----------|------------|---------|---------|--------------|
 | Diffusers (torch 2.1, xformers) |   1.758s |     1.759s |  1.746s |  1.772s |   28.43 it/s |
 | Diffusers (torch 2.1, SDPA) |   1.591s |     1.590s |  1.581s |  1.601s |   31.44 it/s |
+| Diffusers (torch 2.1, SDPA, [tiny VAE](https://github.com/madebyollin/taesd))\* |   1.562s |     1.556s |  1.544s |  1.591s |   32.14 it/s |
 | Diffusers (torch 2.1, SDPA, compiled) |   1.352s |     1.351s |  1.348s |  1.356s |   37.01 it/s |
 | Diffusers (torch 2.1, SDPA, compiled, NCHW channels last) |   1.066s |     1.065s |  1.062s |  1.076s |   46.95 it/s |
 | OneFlow          |   0.951s |     0.953s |  0.941s |  0.957s |   52.48 it/s |
@@ -22,6 +23,7 @@ Running on an A100 80G SXM hosted at [fal.ai](https://fal.ai).
 |                  | mean (s) | median (s) | min (s) | max (s) | speed (it/s) |
 |------------------|----------|------------|---------|---------|--------------|
 | Diffusers (torch 2.1, SDPA) |   5.933s |     5.933s |  5.924s |  5.943s |    8.43 it/s |
+| Diffusers (torch 2.1, SDPA, [tiny VAE](https://github.com/madebyollin/taesd))\* |   5.748s |     5.746s |  5.734s |  5.776s |    8.70 it/s |
 | Diffusers (torch 2.1, xformers) |   5.724s |     5.724s |  5.714s |  5.731s |    8.74 it/s |
 | Diffusers (torch 2.1, SDPA, compiled) |   5.246s |     5.247s |  5.233s |  5.259s |    9.53 it/s |
 | Diffusers (torch 2.1, SDPA, compiled, NCHW channels last) |   5.132s |     5.132s |  5.121s |  5.142s |    9.74 it/s |
@@ -36,6 +38,7 @@ Generation options:
 - For SD1.5, the width/height is 512x512 (the default); for SDXL, the width/height is 1024x1024.
 - For all other options, the defaults from the generation systems are used.
 - Weights are always half-precision (fp16) unless otherwise specified.
+- Generation on benchmarks with a `*`/`**` means the used techniques might lead to quality degradation but the underlying model is still the same.
 
 Environments (like torch and other library versions) for each benchmark are defined
 under [benchmarks/](benchmarks/) folder.

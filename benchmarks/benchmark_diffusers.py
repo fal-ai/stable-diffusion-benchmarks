@@ -25,6 +25,7 @@ def diffusers_any(
     enable_xformers: bool = False,
     use_compile: bool = False,
     use_nchw_channels: bool = False,
+    tiny_vae: str = None,
 ) -> BenchmarkResults:
     # Some of these functionality might not be available in torch 2.1,
     # but setting just in case if in the future we upgrade to a newer
@@ -33,13 +34,19 @@ def diffusers_any(
     os.environ["TORCHINDUCTOR_FX_GRAPH_CACHE"] = "1"
 
     import torch
-    from diffusers import DiffusionPipeline
+    from diffusers import AutoencoderTiny, DiffusionPipeline
 
     pipeline = DiffusionPipeline.from_pretrained(
         model_name,
         torch_dtype=torch.float16,
         use_safetensors=True,
     )
+    if tiny_vae:
+        pipeline.vae = AutoencoderTiny.from_pretrained(
+            tiny_vae,
+            torch_dtype=torch.float16,
+        )
+
     pipeline.to("cuda")
 
     # Use XFormers memory efficient attention instead of Torch SDPA
@@ -72,6 +79,15 @@ LOCAL_BENCHMARKS = [
         "function": diffusers_any,
         "kwargs": {
             "model_name": "runwayml/stable-diffusion-v1-5",
+        },
+    },
+    {
+        "name": r"Diffusers (torch 2.1, SDPA, [tiny VAE](https://github.com/madebyollin/taesd))\*",
+        "category": "SD1.5 (End-to-end)",
+        "function": diffusers_any,
+        "kwargs": {
+            "model_name": "runwayml/stable-diffusion-v1-5",
+            "tiny_vae": "madebyollin/taesd",
         },
     },
     {
@@ -108,6 +124,15 @@ LOCAL_BENCHMARKS = [
         "function": diffusers_any,
         "kwargs": {
             "model_name": "stabilityai/stable-diffusion-xl-base-1.0",
+        },
+    },
+    {
+        "name": r"Diffusers (torch 2.1, SDPA, [tiny VAE](https://github.com/madebyollin/taesd))\*",
+        "category": "SDXL (End-to-end)",
+        "function": diffusers_any,
+        "kwargs": {
+            "model_name": "stabilityai/stable-diffusion-xl-base-1.0",
+            "tiny_vae": "madebyollin/taesdxl",
         },
     },
     {
