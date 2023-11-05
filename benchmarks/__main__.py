@@ -6,13 +6,19 @@ from pathlib import Path
 
 from rich.progress import track
 
-from benchmarks import benchmark_diffusers, benchmark_oneflow, benchmark_tensorrt
+from benchmarks import (
+    benchmark_diffusers,
+    benchmark_minsdxl,
+    benchmark_oneflow,
+    benchmark_tensorrt,
+)
 from benchmarks.settings import BenchmarkSettings, InputParameters
 
 ALL_BENCHMARKS = [
     *benchmark_diffusers.LOCAL_BENCHMARKS,
     *benchmark_tensorrt.LOCAL_BENCHMARKS,
     *benchmark_oneflow.LOCAL_BENCHMARKS,
+    *benchmark_minsdxl.LOCAL_BENCHMARKS,
 ]
 
 

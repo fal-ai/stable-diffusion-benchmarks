@@ -22,6 +22,7 @@ Running on an A100 80G SXM hosted at [fal.ai](https://fal.ai).
 ### SDXL (End-to-end) Benchmarks
 |                  | mean (s) | median (s) | min (s) | max (s) | speed (it/s) |
 |------------------|----------|------------|---------|---------|--------------|
+| [minSDXL](https://github.com/cloneofsimo/minSDXL) (torch 2.1) |   8.131s |     8.133s |  8.116s |  8.145s |    6.15 it/s |
 | Diffusers (torch 2.1, SDPA) |   5.933s |     5.933s |  5.924s |  5.943s |    8.43 it/s |
 | Diffusers (torch 2.1, SDPA, [tiny VAE](https://github.com/madebyollin/taesd))\* |   5.748s |     5.746s |  5.734s |  5.776s |    8.70 it/s |
 | Diffusers (torch 2.1, xformers) |   5.724s |     5.724s |  5.714s |  5.731s |    8.74 it/s |
