@@ -16,7 +16,7 @@ from benchmarks.settings import BenchmarkResults, BenchmarkSettings, InputParame
         "torch==2.1.0",
         "transformers==4.35.0",
         "xformers==0.0.22.post7",
-        "https://github.com/tridao/flash-attention-wheels/releases/download/v2.0.6.post8/flash_attn_wheels_test-2.0.6.post8+cu121torch2.1cxx11abiTRUE-cp311-cp311-linux_x86_64.whl",
+        "https://github.com/Dao-AILab/flash-attention/releases/download/v2.3.3/flash_attn-2.3.3+cu122torch2.1cxx11abiFALSE-cp311-cp311-linux_x86_64.whl",
     ],
     machine_type="GPU",
 )
@@ -69,6 +69,14 @@ LOCAL_BENCHMARKS = [
         "function": diffusers_any,
         "kwargs": {
             "model_url": "https://raw.githubusercontent.com/isidentical/minSDXL/4e378780c75399823aa29404b9e1288d96c22943/sdxl_rewrite.py",
+        },
+    },
+    {
+        "name": "[minSDXL+](https://github.com/isidentical/minSDXL) (torch 2.1, flash-attention v2)",
+        "category": "SDXL (End-to-end)",
+        "function": diffusers_any,
+        "kwargs": {
+            "model_url": "https://raw.githubusercontent.com/isidentical/minSDXL/0fd7fe9c6f6544f7d16eb7a41cd7606cddb9527c/sdxl_rewrite.py",
         },
     },
 ]

@@ -27,6 +27,7 @@ Running on an A100 80G SXM hosted at [fal.ai](https://fal.ai).
 | [minSDXL+](https://github.com/isidentical/minSDXL) (torch 2.1, SDPA) |   5.881s |     5.881s |  5.872s |  5.891s |    8.50 it/s |
 | Diffusers (torch 2.1, SDPA, [tiny VAE](https://github.com/madebyollin/taesd))\* |   5.748s |     5.746s |  5.734s |  5.776s |    8.70 it/s |
 | Diffusers (torch 2.1, xformers) |   5.724s |     5.724s |  5.714s |  5.731s |    8.74 it/s |
+| [minSDXL+](https://github.com/isidentical/minSDXL) (torch 2.1, flash-attention v2) |   5.306s |     5.304s |  5.288s |  5.333s |    9.43 it/s |
 | Diffusers (torch 2.1, SDPA, compiled) |   5.246s |     5.247s |  5.233s |  5.259s |    9.53 it/s |
 | Diffusers (torch 2.1, SDPA, compiled, NCHW channels last) |   5.132s |     5.132s |  5.121s |  5.142s |    9.74 it/s |
 | OneFlow          |   4.605s |     4.607s |  4.581s |  4.625s |   10.85 it/s |
