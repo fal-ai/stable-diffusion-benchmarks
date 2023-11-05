@@ -19,8 +19,6 @@ from benchmarks.settings import BenchmarkResults, BenchmarkSettings, InputParame
         "https://github.com/tridao/flash-attention-wheels/releases/download/v2.0.6.post8/flash_attn_wheels_test-2.0.6.post8+cu121torch2.1cxx11abiTRUE-cp311-cp311-linux_x86_64.whl",
     ],
     machine_type="GPU",
-    _scheduler="nomad",
-    _scheduler_options={"target_node": "65.21.219.34"},
 )
 def diffusers_any(
     benchmark_settings: BenchmarkSettings,
@@ -63,6 +61,14 @@ LOCAL_BENCHMARKS = [
         "function": diffusers_any,
         "kwargs": {
             "model_url": "https://raw.githubusercontent.com/cloneofsimo/minSDXL/504838853cde2736d9d766ec55abe9b481ac7988/sdxl_rewrite.py",
+        },
+    },
+    {
+        "name": "[minSDXL+](https://github.com/isidentical/minSDXL) (torch 2.1, SDPA)",
+        "category": "SDXL (End-to-end)",
+        "function": diffusers_any,
+        "kwargs": {
+            "model_url": "https://raw.githubusercontent.com/isidentical/minSDXL/4e378780c75399823aa29404b9e1288d96c22943/sdxl_rewrite.py",
         },
     },
 ]
