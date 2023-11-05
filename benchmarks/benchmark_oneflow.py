@@ -55,7 +55,7 @@ def oneflow_any(
 LOCAL_BENCHMARKS = [
     {
         "name": "OneFlow",
-        "category": "SD1.5",
+        "category": "SD1.5 (End-to-end)",
         "function": oneflow_any,
         "kwargs": {
             "model_name": "runwayml/stable-diffusion-v1-5",
@@ -64,7 +64,7 @@ LOCAL_BENCHMARKS = [
     },
     {
         "name": "OneFlow",
-        "category": "SDXL",
+        "category": "SDXL (End-to-end)",
         "function": oneflow_any,
         "kwargs": {
             "model_name": "stabilityai/stable-diffusion-xl-base-1.0",

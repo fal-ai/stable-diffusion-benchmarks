@@ -8,7 +8,7 @@ better understanding of their performance and scalability.
 Running on an A100 80G SXM hosted at [fal.ai](https://fal.ai).
 
 <!-- START TABLE -->
-### SD1.5 Benchmarks
+### SD1.5 (End-to-end) Benchmarks
 |                  | mean (s) | median (s) | min (s) | max (s) | speed (it/s) |
 |------------------|----------|------------|---------|---------|--------------|
 | Diffusers (torch 2.1, xformers) |   1.758s |     1.759s |  1.746s |  1.772s |   28.43 it/s |
@@ -18,7 +18,7 @@ Running on an A100 80G SXM hosted at [fal.ai](https://fal.ai).
 | OneFlow          |   0.951s |     0.953s |  0.941s |  0.957s |   52.48 it/s |
 | TensorRT 9.0 (cuda graphs, static shapes) |   0.819s |     0.818s |  0.817s |  0.821s |   61.14 it/s |
 
-### SDXL Benchmarks
+### SDXL (End-to-end) Benchmarks
 |                  | mean (s) | median (s) | min (s) | max (s) | speed (it/s) |
 |------------------|----------|------------|---------|---------|--------------|
 | Diffusers (torch 2.1, SDPA) |   5.933s |     5.933s |  5.924s |  5.943s |    8.43 it/s |

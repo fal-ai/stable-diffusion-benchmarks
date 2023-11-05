@@ -68,7 +68,7 @@ def diffusers_any(
 LOCAL_BENCHMARKS = [
     {
         "name": "Diffusers (torch 2.1, SDPA)",
-        "category": "SD1.5",
+        "category": "SD1.5 (End-to-end)",
         "function": diffusers_any,
         "kwargs": {
             "model_name": "runwayml/stable-diffusion-v1-5",
@@ -76,7 +76,7 @@ LOCAL_BENCHMARKS = [
     },
     {
         "name": "Diffusers (torch 2.1, xformers)",
-        "category": "SD1.5",
+        "category": "SD1.5 (End-to-end)",
         "function": diffusers_any,
         "kwargs": {
             "model_name": "runwayml/stable-diffusion-v1-5",
@@ -85,7 +85,7 @@ LOCAL_BENCHMARKS = [
     },
     {
         "name": "Diffusers (torch 2.1, SDPA, compiled)",
-        "category": "SD1.5",
+        "category": "SD1.5 (End-to-end)",
         "function": diffusers_any,
         "kwargs": {
             "model_name": "runwayml/stable-diffusion-v1-5",
@@ -94,7 +94,7 @@ LOCAL_BENCHMARKS = [
     },
     {
         "name": "Diffusers (torch 2.1, SDPA, compiled, NCHW channels last)",
-        "category": "SD1.5",
+        "category": "SD1.5 (End-to-end)",
         "function": diffusers_any,
         "kwargs": {
             "model_name": "runwayml/stable-diffusion-v1-5",
@@ -104,7 +104,7 @@ LOCAL_BENCHMARKS = [
     },
     {
         "name": "Diffusers (torch 2.1, SDPA)",
-        "category": "SDXL",
+        "category": "SDXL (End-to-end)",
         "function": diffusers_any,
         "kwargs": {
             "model_name": "stabilityai/stable-diffusion-xl-base-1.0",
@@ -112,7 +112,7 @@ LOCAL_BENCHMARKS = [
     },
     {
         "name": "Diffusers (torch 2.1, xformers)",
-        "category": "SDXL",
+        "category": "SDXL (End-to-end)",
         "function": diffusers_any,
         "kwargs": {
             "model_name": "stabilityai/stable-diffusion-xl-base-1.0",
@@ -121,7 +121,7 @@ LOCAL_BENCHMARKS = [
     },
     {
         "name": "Diffusers (torch 2.1, SDPA, compiled)",
-        "category": "SDXL",
+        "category": "SDXL (End-to-end)",
         "function": diffusers_any,
         "kwargs": {
             "model_name": "stabilityai/stable-diffusion-xl-base-1.0",
@@ -130,7 +130,7 @@ LOCAL_BENCHMARKS = [
     },
     {
         "name": "Diffusers (torch 2.1, SDPA, compiled, NCHW channels last)",
-        "category": "SDXL",
+        "category": "SDXL (End-to-end)",
         "function": diffusers_any,
         "kwargs": {
             "model_name": "stabilityai/stable-diffusion-xl-base-1.0",

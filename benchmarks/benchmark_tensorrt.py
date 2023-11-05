@@ -140,7 +140,7 @@ def tensorrt_any(
 LOCAL_BENCHMARKS = [
     {
         "name": "TensorRT 9.0 (cuda graphs, static shapes)",
-        "category": "SD1.5",
+        "category": "SD1.5 (End-to-end)",
         "function": tensorrt_any,
         "kwargs": {
             "model_version": "1.5",
@@ -150,7 +150,7 @@ LOCAL_BENCHMARKS = [
     },
     {
         "name": "TensorRT 9.0 (cuda graphs, static shapes)",
-        "category": "SDXL",
+        "category": "SDXL (End-to-end)",
         "function": tensorrt_any,
         "kwargs": {
             "model_version": "xl-1.0",
