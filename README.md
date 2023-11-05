@@ -7,6 +7,12 @@ better understanding of their performance and scalability.
 
 Running on an A100 80G SXM hosted at [fal.ai](https://fal.ai).
 
+> [!NOTE]
+> Most of the implementations here are also based on Diffusers, which is an amazing library
+> that pretty much the whole industry is using. However, when we use 'Diffusers' name in the
+> benchmarks, it means the experience you might get with out-of-box Diffusers (w/applying
+> necessary settings).
+
 <!-- START TABLE -->
 ### SD1.5 (End-to-end) Benchmarks
 |                  | mean (s) | median (s) | min (s) | max (s) | speed (it/s) |
@@ -41,7 +47,15 @@ Generation options:
 - For SD1.5, the width/height is 512x512 (the default); for SDXL, the width/height is 1024x1024.
 - For all other options, the defaults from the generation systems are used.
 - Weights are always half-precision (fp16) unless otherwise specified.
-- Generation on benchmarks with a `*`/`**` means the used techniques might lead to quality degradation but the underlying model is still the same.
+- Generation on benchmarks with a `*`/`**` means the used techniques might lead to quality degradation but the underlying diffusion model is still the same.
+
+> [!NOTE]
+> All the timings here are end to end, and reflects the time it takes to go from a single prompt
+> to a decoded image. We are planning to make the benchmarking more granular and provide details
+> and comparisons between each components (text encoder, VAE, and most importantly UNET) in the
+> future, but for now, some of the results might not linearly scale with the number of inference
+> steps since cost of certain components are one-time only.
+
 
 Environments (like torch and other library versions) for each benchmark are defined
 under [benchmarks/](benchmarks/) folder.
