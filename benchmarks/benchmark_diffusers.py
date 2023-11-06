@@ -11,7 +11,7 @@ from benchmarks.settings import BenchmarkResults, BenchmarkSettings, InputParame
 @fal.function(
     requirements=[
         "accelerate==0.24.1",
-        "diffusers==0.21.4",
+        "diffusers==0.22.0",
         "torch==2.1.0",
         "transformers==4.35.0",
         "xformers==0.0.22.post7",

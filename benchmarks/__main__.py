@@ -64,6 +64,12 @@ def main() -> None:
         action="store_true",
         help="Force running all benchmarks, even if they have already been run.",
     )
+    parser.add_argument(
+        "--force-run-only",
+        type=str.lower,
+        help="Force running only the specified benchmarks, even if they have already been run.",
+        choices=["diffusers", "tensorrt", "minsdxl", "oneflow"],
+    )
 
     # For ensuring consistency among results, make sure to compare the numbers
     # within the same node. So the driver, cuda version, power supply, CPU compute
@@ -84,7 +90,10 @@ def main() -> None:
     for benchmark in track(ALL_BENCHMARKS, description="Running benchmarks..."):
         benchmark_key = (benchmark["category"], benchmark["name"])
         should_skip = benchmark.get("skip_if", False)
-        if benchmark_key in previous_timings and (not options.force_run or should_skip):
+        should_force_run = options.force_run or (
+            options.force_run_only in benchmark["name"].lower()
+        )
+        if benchmark_key in previous_timings and (not should_force_run or should_skip):
             print(f"Skipping {benchmark_key} (already run)")
             timings.append(
                 {
