@@ -8,6 +8,7 @@ from rich.progress import track
 
 from benchmarks import (
     benchmark_diffusers,
+    benchmark_experimental,
     benchmark_minsdxl,
     benchmark_oneflow,
     benchmark_tensorrt,
@@ -19,6 +20,7 @@ ALL_BENCHMARKS = [
     *benchmark_tensorrt.LOCAL_BENCHMARKS,
     *benchmark_oneflow.LOCAL_BENCHMARKS,
     *benchmark_minsdxl.LOCAL_BENCHMARKS,
+    *benchmark_experimental.LOCAL_BENCHMARKS,
 ]
 
 
@@ -68,7 +70,7 @@ def main() -> None:
         "--force-run-only",
         type=str.lower,
         help="Force running only the specified benchmarks, even if they have already been run.",
-        choices=["diffusers", "tensorrt", "minsdxl", "oneflow"],
+        choices=["diffusers", "tensorrt", "minsdxl", "oneflow", "consistency"],
     )
 
     # For ensuring consistency among results, make sure to compare the numbers
@@ -91,7 +93,8 @@ def main() -> None:
         benchmark_key = (benchmark["category"], benchmark["name"])
         should_skip = benchmark.get("skip_if", False)
         should_force_run = options.force_run or (
-            options.force_run_only in benchmark["name"].lower()
+            options.force_run_only
+            and options.force_run_only in benchmark["name"].lower()
         )
         if benchmark_key in previous_timings and (not should_force_run or should_skip):
             print(f"Skipping {benchmark_key} (already run)")
@@ -116,7 +119,7 @@ def main() -> None:
         benchmark_results = function(
             benchmark_settings=settings,
             parameters=parameters,
-            **benchmark["kwargs"],
+            **benchmark.get("kwargs", {}),
         )
         timings.append(
             {

@@ -17,6 +17,7 @@ Running on an A100 80G SXM hosted at [fal.ai](https://fal.ai).
 ### SD1.5 (End-to-end) Benchmarks
 |                  | mean (s) | median (s) | min (s) | max (s) | speed (it/s) |
 |------------------|----------|------------|---------|---------|--------------|
+| Diffusers (torch 2.1, SDPA) + OpenAI's [consistency decoder](https://github.com/openai/consistencydecoder)\*\* |   2.240s |     2.239s |  2.235s |  2.248s |   22.33 it/s |
 | Diffusers (torch 2.1, xformers) |   1.729s |     1.728s |  1.720s |  1.747s |   28.94 it/s |
 | Diffusers (torch 2.1, SDPA) |   1.604s |     1.603s |  1.589s |  1.618s |   31.19 it/s |
 | Diffusers (torch 2.1, SDPA, [tiny VAE](https://github.com/madebyollin/taesd))\* |   1.567s |     1.562s |  1.547s |  1.602s |   32.02 it/s |
@@ -47,7 +48,7 @@ Generation options:
 - For SD1.5, the width/height is 512x512 (the default); for SDXL, the width/height is 1024x1024.
 - For all other options, the defaults from the generation systems are used.
 - Weights are always half-precision (fp16) unless otherwise specified.
-- Generation on benchmarks with a `*`/`**` means the used techniques might lead to quality degradation but the underlying diffusion model is still the same.
+- Generation on benchmarks with a `*`/`**` means the used techniques might lead to quality degradation (or sometimes improvements) but the underlying diffusion model is still the same.
 
 > [!NOTE]
 > All the timings here are end to end, and reflects the time it takes to go from a single prompt

@@ -26,7 +26,6 @@ def diffusers_any(
     use_compile: bool = False,
     use_nchw_channels: bool = False,
     tiny_vae: str = None,
-    use_freeu: bool = False,
 ) -> BenchmarkResults:
     # Some of these functionality might not be available in torch 2.1,
     # but setting just in case if in the future we upgrade to a newer
