@@ -7,6 +7,7 @@ from pathlib import Path
 from rich.progress import track
 
 from benchmarks import (
+    benchmark_comfy,
     benchmark_diffusers,
     benchmark_experimental,
     benchmark_minsdxl,
@@ -21,6 +22,7 @@ ALL_BENCHMARKS = [
     *benchmark_oneflow.LOCAL_BENCHMARKS,
     *benchmark_minsdxl.LOCAL_BENCHMARKS,
     *benchmark_experimental.LOCAL_BENCHMARKS,
+    *benchmark_comfy.LOCAL_BENCHMARKS,
 ]
 
 
@@ -70,7 +72,7 @@ def main() -> None:
         "--force-run-only",
         type=str.lower,
         help="Force running only the specified benchmarks, even if they have already been run.",
-        choices=["diffusers", "tensorrt", "minsdxl", "oneflow", "consistency"],
+        choices=["diffusers", "tensorrt", "minsdxl", "oneflow", "consistency", "comfy"],
     )
 
     # For ensuring consistency among results, make sure to compare the numbers
