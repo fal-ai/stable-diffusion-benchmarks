@@ -5,7 +5,9 @@ better understanding of their performance and scalability.
 
 ## Benchmarks
 
-Running on an A100 80G SXM hosted at [fal.ai](https://fal.ai).
+Running on an A100 80G SXM hosted at [fal.ai](https://fal.ai). If you want to see how these models perform first hand,
+check out the [Fast SDXL](https://www.fal.ai/models/stable-diffusion-xl) playground which offers one of the most optimized
+SDXL implementations available (combining the open source techniques from this repo).
 
 > [!NOTE]
 > Most of the implementations here are also based on Diffusers, which is an amazing library
