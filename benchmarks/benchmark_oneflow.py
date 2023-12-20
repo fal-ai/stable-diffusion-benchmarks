@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import sys
 from functools import partial
 
 import fal
@@ -11,16 +10,15 @@ from benchmarks.settings import BenchmarkResults, BenchmarkSettings, InputParame
 @fal.function(
     requirements=[
         "--pre",
-        "torch==2.1.0",
-        "transformers==4.27.1",
-        "diffusers[torch]==0.19.3",
-        "onediff",
+        "torch>=2.1.0",
+        "transformers>=4.27.1",
+        "diffusers>=0.19.3",
+        "git+https://github.com/Oneflow-Inc/onediff.git@0.11.3",
         "oneflow",
         "-f",
-        "https://oneflow-staging.oss-cn-beijing.aliyuncs.com/branch/master/cu118",
+        "https://oneflow-pro.oss-cn-beijing.aliyuncs.com/branch/community/cu121",
     ],
     machine_type="GPU",
-    python_version="3.10",
 )
 def oneflow_any(
     benchmark_settings: BenchmarkSettings,
@@ -47,11 +45,6 @@ def oneflow_any(
         return benchmark_settings.apply(infer_func)
 
 
-# Since OneFlow doesn't support Python>3.10 (which we actively use), we are
-# skipping these benchmarks in our continuous integration suite for now. If you
-# make a change, be sure to run them manually on your computer and commit the
-# results as artifacts.
-
 LOCAL_BENCHMARKS = [
     {
         "name": "OneFlow",
@@ -60,7 +53,6 @@ LOCAL_BENCHMARKS = [
         "kwargs": {
             "model_name": "runwayml/stable-diffusion-v1-5",
         },
-        "skip_if": sys.version_info > (3, 10),
     },
     {
         "name": "OneFlow",
@@ -69,6 +61,5 @@ LOCAL_BENCHMARKS = [
         "kwargs": {
             "model_name": "stabilityai/stable-diffusion-xl-base-1.0",
         },
-        "skip_if": sys.version_info > (3, 10),
     },
 ]
