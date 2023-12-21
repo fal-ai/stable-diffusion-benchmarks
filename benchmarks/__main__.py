@@ -12,6 +12,7 @@ from benchmarks import (
     benchmark_experimental,
     benchmark_minsdxl,
     benchmark_oneflow,
+    benchmark_stablefast,
     benchmark_tensorrt,
 )
 from benchmarks.settings import BenchmarkSettings, InputParameters
@@ -23,6 +24,7 @@ ALL_BENCHMARKS = [
     *benchmark_minsdxl.LOCAL_BENCHMARKS,
     *benchmark_experimental.LOCAL_BENCHMARKS,
     *benchmark_comfy.LOCAL_BENCHMARKS,
+    *benchmark_stablefast.LOCAL_BENCHMARKS,
 ]
 
 
@@ -72,7 +74,15 @@ def main() -> None:
         "--force-run-only",
         type=str.lower,
         help="Force running only the specified benchmarks, even if they have already been run.",
-        choices=["diffusers", "tensorrt", "minsdxl", "oneflow", "consistency", "comfy"],
+        choices=[
+            "diffusers",
+            "tensorrt",
+            "minsdxl",
+            "oneflow",
+            "consistency",
+            "comfy",
+            "stablefast",
+        ],
     )
 
     # For ensuring consistency among results, make sure to compare the numbers
