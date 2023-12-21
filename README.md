@@ -26,6 +26,7 @@ SDXL implementations available (combining the open source techniques from this r
 | Diffusers (torch 2.1, SDPA, compiled) |   1.354s |     1.354s |  1.351s |  1.356s |   36.93 it/s |
 | Diffusers (torch 2.1, SDPA, compiled, NCHW channels last) |   1.058s |     1.057s |  1.056s |  1.060s |   47.29 it/s |
 | OneFlow          |   0.950s |     0.950s |  0.947s |  0.961s |   52.65 it/s |
+| Stable Fast (torch 2.1) |   0.901s |     0.901s |  0.900s |  0.903s |   55.51 it/s |
 | TensorRT 9.0 (cuda graphs, static shapes) |   0.819s |     0.818s |  0.817s |  0.821s |   61.14 it/s |
 
 ### SDXL (End-to-end) Benchmarks
@@ -41,6 +42,7 @@ SDXL implementations available (combining the open source techniques from this r
 | Diffusers (torch 2.1, SDPA, compiled) |   5.217s |     5.216s |  5.213s |  5.220s |    9.59 it/s |
 | Diffusers (torch 2.1, SDPA, compiled, NCHW channels last) |   5.136s |     5.137s |  5.125s |  5.147s |    9.73 it/s |
 | OneFlow          |   4.300s |     4.301s |  4.282s |  4.316s |   11.62 it/s |
+| Stable Fast (torch 2.1) |   4.150s |     4.149s |  4.138s |  4.168s |   12.05 it/s |
 | TensorRT 9.0 (cuda graphs, static shapes) |   4.102s |     4.104s |  4.091s |  4.107s |   12.18 it/s |
 
 <!-- END TABLE -->
