@@ -1,5 +1,7 @@
 import argparse
 import json
+import traceback
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
@@ -55,6 +57,44 @@ def load_previous_timings(
     }
 
 
+def run_benchmark(
+    benchmark_key: tuple[str, str],
+    benchmark: dict,
+    settings: BenchmarkSettings,
+    parameters: InputParameters,
+    options: argparse.Namespace,
+):
+    print(f"Running benchmark: {benchmark_key}")
+    function = benchmark["function"].on(
+        machine_type=options.machine_type,
+        _scheduler="nomad",
+    )
+    if options.target_node:
+        function = function.on(
+            _scheduler_options={
+                "target_node": options.target_node,
+            }
+        )
+
+    if options.datacenters:
+        function = function.on(
+            _scheduler_options={
+                "datacenters": options.datacenters,
+            }
+        )
+
+    benchmark_results = function(
+        benchmark_settings=settings,
+        parameters=parameters,
+        **benchmark.get("kwargs", {}),
+    )
+    return {
+        "name": benchmark["name"],
+        "category": benchmark["category"],  # "SD1.5", "SDXL"
+        "timings": benchmark_results.timings,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("results_dir", type=Path)
@@ -84,11 +124,18 @@ def main() -> None:
             "stablefast",
         ],
     )
+    parser.add_argument(
+        "--machine-type",
+        type=str,
+        default="GPU",
+        choices=["GPU", "GPU-A6000"],
+    )
 
     # For ensuring consistency among results, make sure to compare the numbers
     # within the same node. So the driver, cuda version, power supply, CPU compute
     # etc. are all the same.
     parser.add_argument("--target-node", type=str, default=None)
+    parser.add_argument("--datacenters", type=str, nargs="*")
 
     options = parser.parse_args()
     session_file = options.results_dir / f"{options.session_id}.json"
@@ -101,45 +148,56 @@ def main() -> None:
 
     timings = []
     previous_timings = load_previous_timings(session_file, settings, parameters)
-    for benchmark in track(ALL_BENCHMARKS, description="Running benchmarks..."):
-        benchmark_key = (benchmark["category"], benchmark["name"])
-        should_skip = benchmark.get("skip_if", False)
-        should_force_run = options.force_run or (
-            options.force_run_only
-            and options.force_run_only in benchmark["name"].lower()
-        )
-        if benchmark_key in previous_timings and (not should_force_run or should_skip):
-            print(f"Skipping {benchmark_key} (already run)")
-            timings.append(
-                {
-                    "name": benchmark["name"],
-                    "category": benchmark["category"],  # "SD1.5", "SDXL"
-                    "timings": previous_timings[benchmark_key],
-                }
-            )
-            continue
 
-        print(f"Running benchmark: {benchmark_key}")
-        function = benchmark["function"].on(_scheduler="nomad")
-        if options.target_node:
-            function = function.on(
-                _scheduler_options={
-                    "target_node": options.target_node,
-                }
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        benchmark_futures = []
+
+        for benchmark in ALL_BENCHMARKS:
+            benchmark_key = (benchmark["category"], benchmark["name"])
+            should_skip = benchmark.get("skip_if", False)
+            should_force_run = options.force_run or (
+                options.force_run_only
+                and options.force_run_only in benchmark["name"].lower()
+            )
+            if benchmark_key in previous_timings and (
+                not should_force_run or should_skip
+            ):
+                print(f"Skipping {benchmark_key} (already run)")
+                future = Future()  # type: ignore
+                future.set_result(
+                    {
+                        "name": benchmark["name"],
+                        "category": benchmark["category"],
+                        "timings": previous_timings[benchmark_key],
+                    }
+                )
+                benchmark_futures.append(future)
+                continue
+
+            benchmark_futures.append(
+                executor.submit(
+                    run_benchmark,
+                    benchmark_key,
+                    benchmark,
+                    settings,
+                    parameters,
+                    options,
+                )
             )
 
-        benchmark_results = function(
-            benchmark_settings=settings,
-            parameters=parameters,
-            **benchmark.get("kwargs", {}),
-        )
-        timings.append(
-            {
-                "name": benchmark["name"],
-                "category": benchmark["category"],  # "SD1.5", "SDXL"
-                "timings": benchmark_results.timings,
-            }
-        )
+        for future in track(
+            as_completed(benchmark_futures),
+            total=len(benchmark_futures),
+            description="Running benchmarks",
+        ):
+            try:
+                result = future.result()
+            except Exception as exc:
+                print("Benchmark failed!!")
+                traceback.print_exc()
+                continue
+            else:
+                timings.append(result)
 
     results = {
         "settings": asdict(settings),
