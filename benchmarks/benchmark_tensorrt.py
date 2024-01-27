@@ -73,6 +73,8 @@ def tensorrt_any(
     image_height: int,
     image_width: int,
 ) -> BenchmarkResults:
+    import torch
+
     trt_path = prepare_tensorrt()
     diffusion_dir = trt_path / "demo" / "Diffusion"
     if str(diffusion_dir) not in sys.path:
@@ -102,7 +104,7 @@ def tensorrt_any(
 
         pipeline = StableDiffusionPipeline(**options)
         pipeline.loadEngines(
-            engine_dir=f"engine-{model_version}",
+            engine_dir=f"engine-{model_version}-{torch.cuda.get_device_name(0)}",
             framework_model_dir="pytorch_model",
             onnx_dir=f"onnx-{model_version}",
             onnx_opset=18,
@@ -116,7 +118,7 @@ def tensorrt_any(
             force_optimize=False,
             static_batch=True,
             static_shape=True,
-            timing_cache=f"cache-{model_version}",
+            timing_cache=f"cache-{model_version}-{torch.cuda.get_device_name(0)}",
         )
 
         # Load resources
